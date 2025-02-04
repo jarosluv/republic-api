@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :business_owners, only: [ :index, :show ], shallow: true do
         resources :business_entities, only: [ :index, :show ]
       end
+      resources :buyers, only: [ :index, :show ]
     end
   end
 

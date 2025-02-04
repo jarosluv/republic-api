@@ -4,4 +4,4 @@ new_buyer:
 
 buyer_with_shares:
   name: Bernardo
-  available_funds: 990
+  available_funds: 999.99

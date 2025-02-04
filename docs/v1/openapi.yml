@@ -334,9 +334,9 @@ components:
           type: string
           example: "Alice"
         available_funds:
-          type: number
-          format: float
-          example: 10000.00
+          type: string
+          format: double
+          example: 9999.99
         created_at:
           type: string
           format: date-time
