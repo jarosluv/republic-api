@@ -136,7 +136,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/v1/business_entities/{id}/buy_orders:
+  /api/v1/business_entities/{business_entity_id}/buy_orders:
     get:
       summary: Retrieve buy orders for a business entity
       description: >
@@ -144,7 +144,7 @@ paths:
         Business owners see all orders whereas buyers do not see orders with a pending status.
       parameters:
         - in: path
-          name: id
+          name: business_entity_id
           required: true
           schema:
             type: integer
@@ -158,6 +158,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/BuyOrder"
+        "404":
+          description: Business entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
       summary: Create a new buy order for a business entity
       description: >

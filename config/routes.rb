@@ -9,7 +9,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :business_owners, only: [ :index, :show ], shallow: true do
-        resources :business_entities, only: [ :index, :show ]
+        resources :business_entities, only: [ :index, :show ], shallow: true do
+          resources :buy_orders, only: [ :index ]
+        end
       end
       resources :buyers, only: [ :index, :show ]
     end
