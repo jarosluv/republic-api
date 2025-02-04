@@ -1,4 +1,4 @@
-require 'dry/monads/result'
+require "dry/monads/result"
 
 RSpec.describe "BuyOrders API", type: :request do
   fixtures :buy_orders, :business_entities, :buyers

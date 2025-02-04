@@ -13,9 +13,9 @@ RSpec.describe PlaceBuyOrder do
     entity.update!(available_shares: 100, share_price: 10)
   end
 
-  describe '#call' do
-    context 'basic scenarios' do
-      it 'places an order and updates records when successful' do
+  describe "#call" do
+    context "basic scenarios" do
+      it "places an order and updates records when successful" do
         result = command.call(entity, buyer, quantity)
         expect(result).to be_success
 
@@ -30,29 +30,29 @@ RSpec.describe PlaceBuyOrder do
         expect(order.share_price).to eq(entity.share_price)
       end
 
-      it 'returns a Failure with :insufficient_funds when buyer funds are too low' do
+      it "returns a Failure with :insufficient_funds when buyer funds are too low" do
         buyer.update!(available_funds: entity.share_price * (quantity - 1))
         result = command.call(entity, buyer, quantity)
         expect(result).to be_failure
         expect(result.failure).to eq(:insufficient_funds)
       end
 
-      it 'returns a Failure with :insufficient_shares when not enough shares are available' do
+      it "returns a Failure with :insufficient_shares when not enough shares are available" do
         entity.update!(available_shares: quantity - 1)
         result = command.call(entity, buyer, quantity)
         expect(result).to be_failure
         expect(result.failure).to eq(:insufficient_shares)
       end
 
-      it 'returns a Failure with :order_creation_failed when requested quantity is 0' do
+      it "returns a Failure with :order_creation_failed when requested quantity is 0" do
         result = command.call(entity, buyer, 0)
         expect(result).to be_failure
         expect(result.failure).to eq(:order_creation_failed)
       end
     end
 
-    context 'border conditions' do
-      it 'succeeds when quantity is 0' do
+    context "border conditions" do
+      it "succeeds when quantity is 0" do
         result = command.call(entity, buyer, 1)
 
         expect(result).to be_success
@@ -65,7 +65,7 @@ RSpec.describe PlaceBuyOrder do
         expect(order.share_quantity).to eq(1)
       end
 
-      it 'succeeds when buyer funds exactly equal the required amount' do
+      it "succeeds when buyer funds exactly equal the required amount" do
         buyer.update!(available_funds: entity.share_price * quantity)
         result = command.call(entity, buyer, quantity)
         expect(result).to be_success
@@ -74,7 +74,7 @@ RSpec.describe PlaceBuyOrder do
         expect(entity.reload.available_shares).to eq(100 - quantity)
       end
 
-      it 'succeeds when the entity has exactly the order quantity of shares' do
+      it "succeeds when the entity has exactly the order quantity of shares" do
         entity.update!(available_shares: quantity)
         result = command.call(entity, buyer, quantity)
         expect(result).to be_success
@@ -82,14 +82,14 @@ RSpec.describe PlaceBuyOrder do
         expect(entity.reload.available_shares).to eq(0)
       end
 
-      it 'disallows a negative quantity' do
+      it "disallows a negative quantity" do
         result = command.call(entity, buyer, -5)
         expect(result).to be_failure
       end
     end
 
-    context 'concurrent requests' do
-      it 'handles concurrent orders without overselling shares' do
+    context "concurrent requests" do
+      it "handles concurrent orders without overselling shares" do
         # Reset records for concurrency test.
         buyer.update!(available_funds: 1_000)
         entity.update!(available_shares: 100, share_price: 10)

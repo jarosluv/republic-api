@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 8.0.1"
-gem "sqlite3", ">= 2.1"
+gem "bootsnap", require: false
+gem "dry-monads"
 gem "puma", ">= 5.0"
+gem "rails", "~> 8.0.1"
 gem "solid_cache"
 gem "solid_queue"
-gem "dry-monads"
+gem "sqlite3", ">= 2.1"
 gem "stateful_enum"
-gem "bootsnap", require: false
 gem "thruster", require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
@@ -23,8 +23,8 @@ gem "skooma", "~> 0.3"
 
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "brakeman", require: false
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "rspec-rails", require: false
   gem "rubocop-rails-omakase", require: false
 end

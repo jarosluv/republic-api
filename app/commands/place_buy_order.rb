@@ -58,8 +58,8 @@ class PlaceBuyOrder
     buyer.save!
 
     Success([ entity, buyer ])
-  rescue StandardError => error
-    Rails.logger.error("Update records error: #{error.message}")
+  rescue StandardError => e
+    Rails.logger.error("Update records error: #{e.message}")
     Failure(:update_failed)
   end
 
@@ -74,8 +74,8 @@ class PlaceBuyOrder
       placed_at: Time.current
     )
     Success(order)
-  rescue ActiveRecord::RecordInvalid => error
-    Rails.logger.error("Create order error: #{error.message}")
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error("Create order error: #{e.message}")
     Failure(:order_creation_failed)
   end
 end
