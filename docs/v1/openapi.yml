@@ -221,7 +221,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BuyOrder"
-        "400":
+        "422":
           description: Invalid request or order cannot be accepted.
           content:
             application/json:

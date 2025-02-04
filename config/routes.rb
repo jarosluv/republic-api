@@ -12,7 +12,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :business_owners, only: [ :index, :show ], shallow: true do
         resources :business_entities, only: [ :index, :show ], shallow: true do
-          resources :buy_orders, only: [ :index, :create ]
+          resources :buy_orders, only: [ :index, :create ] do
+            put :accept
+          end
         end
       end
       resources :buyers, only: [ :index, :show ]

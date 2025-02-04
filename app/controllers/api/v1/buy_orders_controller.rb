@@ -28,6 +28,20 @@ module Api
         render json: { status: "error", message: "Business entity or buyer not found" }, status: :not_found
       end
 
+      # PUT /api/v1/buy_orders/:buy_order_id/accept
+      def accept
+        buy_order = BuyOrder.find(params[:buy_order_id])
+        result = AcceptBuyOrder.new.call(buy_order)
+
+        if result.success?
+          render json: result.value!, status: :ok
+        else
+          render json: { status: "error", message: error_message(result.failure) }, status: :unprocessable_content
+        end
+      rescue ActiveRecord::RecordNotFound
+        render json: { status: "error", message: "Buy order not found" }, status: :not_found
+      end
+
       private
 
       def error_message(error)
@@ -36,7 +50,7 @@ module Api
           "Insufficient funds available to complete the purchase."
         when :insufficient_shares
           "Not enough shares available."
-        when :update_failed, :order_creation_failed, :error
+        when :update_failed, :order_creation_failed, :buy_order_not_saved
           "An error occurred while processing your order. Please try again later."
         else
           "An unknown error occurred."
