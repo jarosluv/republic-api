@@ -171,7 +171,7 @@ paths:
         Validations ensure that the share quantity is positive and the share price is greater than zero.
       parameters:
         - in: path
-          name: id
+          name: business_entity_id
           required: true
           schema:
             type: integer
@@ -189,8 +189,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BuyOrder"
-        "400":
-          description: Invalid input or business entity not found.
+        "404":
+          description: Business entity or buyer not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: Unprocessable content.
           content:
             application/json:
               schema:
@@ -388,21 +394,15 @@ components:
       type: object
       required:
         - buyer_id
-        - share_quantity
-        - share_price
+        - quantity
       properties:
         buyer_id:
           type: integer
           example: 1
-        share_quantity:
+        quantity:
           type: integer
           minimum: 1
           example: 100
-        share_price:
-          type: string
-          format: double
-          minimum: 0.01
-          example: 10.50
 
     Error:
       type: object

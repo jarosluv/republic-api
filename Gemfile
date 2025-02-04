@@ -5,6 +5,7 @@ gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 gem "solid_cache"
 gem "solid_queue"
+gem "dry-monads"
 gem "bootsnap", require: false
 gem "thruster", require: false
 

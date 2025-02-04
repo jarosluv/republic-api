@@ -10,6 +10,38 @@ module Api
       rescue ActiveRecord::RecordNotFound
         render json: { error: "Business entity not found" }, status: :not_found
       end
+
+      # POST /api/v1/business_entities/:business_entity_id/buy_orders
+      def create
+        entity = BusinessEntity.find(params[:business_entity_id])
+        buyer = Buyer.find(params.require(:buyer_id))
+        quantity = params.require(:quantity).to_i
+
+        result = PlaceBuyOrder.new.call(entity, buyer, quantity)
+
+        if result.success?
+          render json: result.value!, status: :created
+        else
+          render json: { status: "error", message: error_message(result.failure) }, status: :unprocessable_content
+        end
+      rescue ActiveRecord::RecordNotFound
+        render json: { status: "error", message: "Business entity or buyer not found" }, status: :not_found
+      end
+
+      private
+
+      def error_message(error)
+        case error
+        when :insufficient_funds
+          "Insufficient funds available to complete the purchase."
+        when :insufficient_shares
+          "Not enough shares available."
+        when :update_failed, :order_creation_failed, :error
+          "An error occurred while processing your order. Please try again later."
+        else
+          "An unknown error occurred."
+        end
+      end
     end
   end
 end

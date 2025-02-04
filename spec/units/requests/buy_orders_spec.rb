@@ -1,5 +1,7 @@
+require 'dry/monads/result'
+
 RSpec.describe "BuyOrders API", type: :request do
-  fixtures :buy_orders, :business_entities
+  fixtures :buy_orders, :business_entities, :buyers
 
   describe "GET /api/v1/business_entities/:business_entity_id/buy_orders" do
     let(:business_entity) { business_entities(:company) }
@@ -22,6 +24,99 @@ RSpec.describe "BuyOrders API", type: :request do
 
         json = JSON.parse(response.body)
         expect(json["error"]).to eq("Business entity not found")
+      end
+    end
+  end
+
+  describe "POST /buy_orders" do
+    let!(:entity) { business_entities(:company) }
+    let!(:buyer)  { buyers(:buyer_with_shares) }
+    let(:quantity) { 10 }
+    let(:params)   { { buyer_id: buyer.id, quantity: quantity } }
+
+    let(:place_buy_order_double) { instance_double(PlaceBuyOrder) }
+
+    before do
+      allow(PlaceBuyOrder).to receive(:new).and_return(place_buy_order_double)
+    end
+
+    context "when the order is placed successfully" do
+      before do
+        success_result = Dry::Monads::Success(buy_orders(:pending_order))
+        allow(place_buy_order_double).to receive(:call).and_return(success_result)
+      end
+
+      it "returns a success response with status 201" do
+        post "/api/v1/business_entities/#{entity.id}/buy_orders", params: params, as: :json
+        expect(response).to have_http_status(:created)
+        expect(response).to conform_schema(201)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("pending")
+      end
+    end
+
+    context "when the buyer has insufficient funds" do
+      before do
+        failure_result = Dry::Monads::Failure(:insufficient_funds)
+        allow(place_buy_order_double).to receive(:call).and_return(failure_result)
+      end
+
+      it "returns an error response with status 422" do
+        post "/api/v1/business_entities/#{entity.id}/buy_orders", params: params, as: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to conform_schema(422)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("error")
+        expect(json["message"]).to eq("Insufficient funds available to complete the purchase.")
+      end
+    end
+
+    context "when the entity has insufficient shares" do
+      before do
+        failure_result = Dry::Monads::Failure(:insufficient_shares)
+        allow(place_buy_order_double).to receive(:call).and_return(failure_result)
+      end
+
+      it "returns an error response with status 422" do
+        post "/api/v1/business_entities/#{entity.id}/buy_orders", params: params, as: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to conform_schema(422)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("error")
+        expect(json["message"]).to eq("Not enough shares available.")
+      end
+    end
+
+    context "when an unexpected error occurs" do
+      before do
+        failure_result = Dry::Monads::Failure(:error)
+        allow(place_buy_order_double).to receive(:call).and_return(failure_result)
+      end
+
+      it "returns an error response with status 422" do
+        post "/api/v1/business_entities/#{entity.id}/buy_orders", params: params, as: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to conform_schema(422)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("error")
+        expect(json["message"]).to eq("An error occurred while processing your order. Please try again later.")
+      end
+    end
+
+    context "when the entity is not found" do
+      it "returns a not found response with status 404" do
+        # Here, we do not stub the command because the error will occur during the lookup.
+        post "/api/v1/business_entities/#{entity.id}/buy_orders", params: { buyer_id: -1, quantity: quantity }, as: :json
+        expect(response).to have_http_status(:not_found)
+        expect(response).to conform_schema(404)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("error")
+        expect(json["message"]).to match(/Business entity or buyer not found/)
       end
     end
   end
