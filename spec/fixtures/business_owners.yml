@@ -1,5 +1,8 @@
 owner:
   name: Owner
 
+second_owner:
+  name: Second owner
+
 owner_without_business:
   name: LTD

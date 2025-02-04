@@ -5,7 +5,7 @@ company:
   share_price: 5
 
 company_without_orders:
-  business_owner: owner
+  business_owner: second_owner
   name: Company without orders
   available_shares: 0
   share_price: 10
