@@ -15,7 +15,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_171126) do
     t.integer "business_owner_id", null: false
     t.string "name"
     t.integer "available_shares"
-    t.decimal "share_price"
+    t.decimal "share_price", precision: 12, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["business_owner_id"], name: "index_business_entities_on_business_owner_id"
@@ -31,8 +31,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_171126) do
     t.integer "business_entity_id", null: false
     t.integer "buyer_id", null: false
     t.string "status", default: "pending", null: false
-    t.integer "share_quantity"
-    t.decimal "share_price"
+    t.integer "share_quantity", null: false
+    t.decimal "share_price", precision: 12, scale: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["business_entity_id", "buyer_id"], name: "index_buy_orders_on_business_entity_id_and_buyer_id"
@@ -43,7 +43,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_171126) do
 
   create_table "buyers", force: :cascade do |t|
     t.string "name"
-    t.decimal "available_funds"
+    t.decimal "available_funds", precision: 12, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
