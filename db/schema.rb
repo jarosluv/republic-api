@@ -10,5 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 0) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_04_171126) do
+  create_table "business_entities", force: :cascade do |t|
+    t.integer "business_owner_id", null: false
+    t.string "name"
+    t.integer "available_shares"
+    t.decimal "share_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_owner_id"], name: "index_business_entities_on_business_owner_id"
+  end
+
+  create_table "business_owners", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "buy_orders", force: :cascade do |t|
+    t.integer "business_entity_id", null: false
+    t.integer "buyer_id", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "share_quantity"
+    t.decimal "share_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_entity_id", "buyer_id"], name: "index_buy_orders_on_business_entity_id_and_buyer_id"
+    t.index ["business_entity_id"], name: "index_buy_orders_on_business_entity_id"
+    t.index ["buyer_id"], name: "index_buy_orders_on_buyer_id"
+    t.index ["status"], name: "index_buy_orders_on_status"
+  end
+
+  create_table "buyers", force: :cascade do |t|
+    t.string "name"
+    t.decimal "available_funds"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "business_entities", "business_owners"
+  add_foreign_key "buy_orders", "business_entities"
+  add_foreign_key "buy_orders", "buyers"
 end

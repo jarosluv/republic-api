@@ -1,0 +1,13 @@
+  pending_order:
+    business_entity: company
+    buyer: buyer_with_shares
+    status: pending
+    share_quantity: 5
+    share_price: 5
+
+  accepted_order:
+    business_entity: company
+    buyer: buyer_with_shares
+    status: accepted
+    share_quantity: 100
+    share_price: 5

@@ -1,0 +1,11 @@
+company:
+  business_owner: owner
+  name: Company
+  available_shares: 150
+  share_price: 5
+
+company_without_orders:
+  business_owner: owner
+  name: Company without orders
+  available_shares: 0
+  share_price: 10
