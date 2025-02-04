@@ -1,0 +1,380 @@
+openapi: "3.1.0"
+info:
+  title: Republic / Stock Trading API
+  version: "1.0.0"
+  description: >
+    API for managing business owners, business entities, buyers, and buy orders.
+    - Business owners can see all buy orders.
+    - Buyers do not see pending orders.
+    - Business owners can accept or reject pending orders.
+    - Buyers can cancel their own orders.
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /business_owners:
+    get:
+      summary: Retrieve a list of all business owners
+      responses:
+        "200":
+          description: A list of business owners.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BusinessOwner"
+
+  /business_owners/{id}:
+    get:
+      summary: Retrieve a business owner by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The unique identifier of the business owner.
+      responses:
+        "200":
+          description: Business owner details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessOwner"
+        "404":
+          description: Business owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /business_entities/{id}:
+    get:
+      summary: Retrieve a business entity by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The unique identifier of the business entity.
+      responses:
+        "200":
+          description: Business entity details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessEntity"
+        "404":
+          description: Business entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /buyers:
+    get:
+      summary: Retrieve a list of all buyers
+      responses:
+        "200":
+          description: A list of buyers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Buyer"
+
+  /buyers/{id}:
+    get:
+      summary: Retrieve a buyer by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The unique identifier of the buyer.
+      responses:
+        "200":
+          description: Buyer details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Buyer"
+        "404":
+          description: Buyer not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /business_entities/{id}/buy_orders:
+    get:
+      summary: Retrieve buy orders for a business entity
+      description: >
+        Returns all buy orders for the specified business entity.
+        Business owners see all orders whereas buyers do not see orders with a pending status.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the business entity.
+      responses:
+        "200":
+          description: A list of buy orders for the business entity.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BuyOrder"
+    post:
+      summary: Create a new buy order for a business entity
+      description: >
+        Buyers can create a new buy order for the specified business entity.
+        Validations ensure that the share quantity is positive and the share price is greater than zero.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the business entity for which the order is being placed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BuyOrderInput"
+      responses:
+        "201":
+          description: Buy order created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuyOrder"
+        "400":
+          description: Invalid input or business entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /buy_orders/{id}/accept:
+    put:
+      summary: Accept a buy order
+      description: >
+        Business owners use this endpoint to accept a pending buy order.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the buy order to accept.
+      responses:
+        "200":
+          description: Buy order accepted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuyOrder"
+        "400":
+          description: Invalid request or order cannot be accepted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Buy order not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /buy_orders/{id}/reject:
+    put:
+      summary: Reject a buy order
+      description: >
+        Business owners use this endpoint to reject a pending buy order.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the buy order to reject.
+      responses:
+        "200":
+          description: Buy order rejected successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuyOrder"
+        "400":
+          description: Invalid request or order cannot be rejected.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Buy order not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /buy_orders/{id}:
+    delete:
+      summary: Cancel a buy order
+      description: >
+        Buyers can cancel (delete) their own buy orders.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the buy order to cancel.
+      responses:
+        "204":
+          description: Buy order canceled successfully.
+        "404":
+          description: Buy order not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    BusinessOwner:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+
+    BusinessEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        business_owner_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Acme Corp."
+        available_shares:
+          type: integer
+          example: 1000
+        share_price:
+          type: number
+          format: float
+          example: 10.50
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+
+    Buyer:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Alice"
+        available_funds:
+          type: number
+          format: float
+          example: 10000.00
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+
+    BuyOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        business_entity_id:
+          type: integer
+          example: 1
+        buyer_id:
+          type: integer
+          example: 1
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+          example: "pending"
+        share_quantity:
+          type: integer
+          example: 100
+        share_price:
+          type: number
+          format: float
+          example: 10.50
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-04T16:00:00Z"
+
+    BuyOrderInput:
+      type: object
+      required:
+        - buyer_id
+        - share_quantity
+        - share_price
+      properties:
+        buyer_id:
+          type: integer
+          example: 1
+        share_quantity:
+          type: integer
+          minimum: 1
+          example: 100
+        share_price:
+          type: number
+          format: float
+          minimum: 0.01
+          example: 10.50
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Resource not found or invalid input."

@@ -67,4 +67,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # Open API (Swagger)
+  path_to_openapi = Rails.root.join("docs/v1/openapi.yml")
+  config.include Skooma::RSpec[path_to_openapi, coverage: :report], type: :request
 end

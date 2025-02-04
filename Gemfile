@@ -14,6 +14,11 @@ gem "thruster", require: false
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
+# API
+gem "rswag-api", "~> 2.13"
+gem "rswag-ui", "~> 2.13"
+gem "skooma", "~> 0.3"
+
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
