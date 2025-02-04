@@ -12,7 +12,7 @@ servers:
   - url: https://api.example.com/v1
 
 paths:
-  /business_owners:
+  /api/v1/business_owners:
     get:
       summary: Retrieve a list of all business owners
       responses:
@@ -25,7 +25,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/BusinessOwner"
 
-  /business_owners/{id}:
+  /api/v1/business_owners/{id}:
     get:
       summary: Retrieve a business owner by ID
       parameters:
@@ -49,7 +49,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /business_entities/{id}:
+  /api/v1/business_entities/{id}:
     get:
       summary: Retrieve a business entity by ID
       parameters:
@@ -73,7 +73,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /buyers:
+  /api/v1/buyers:
     get:
       summary: Retrieve a list of all buyers
       responses:
@@ -86,7 +86,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Buyer"
 
-  /buyers/{id}:
+  /api/v1/buyers/{id}:
     get:
       summary: Retrieve a buyer by ID
       parameters:
@@ -110,7 +110,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /business_entities/{id}/buy_orders:
+  /api/v1/business_entities/{id}/buy_orders:
     get:
       summary: Retrieve buy orders for a business entity
       description: >
@@ -164,7 +164,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /buy_orders/{id}/accept:
+  /api/v1/buy_orders/{id}/accept:
     put:
       summary: Accept a buy order
       description: >
@@ -196,7 +196,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /buy_orders/{id}/reject:
+  /api/v1/buy_orders/{id}/reject:
     put:
       summary: Reject a buy order
       description: >
@@ -228,7 +228,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /buy_orders/{id}:
+  /api/v1/buy_orders/{id}:
     delete:
       summary: Cancel a buy order
       description: >
