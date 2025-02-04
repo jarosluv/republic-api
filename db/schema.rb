@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_04_171126) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_04_224803) do
   create_table "business_entities", force: :cascade do |t|
     t.integer "business_owner_id", null: false
     t.string "name"
@@ -35,6 +35,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_171126) do
     t.decimal "share_price", precision: 12, scale: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "placed_at", null: false
+    t.datetime "processed_at"
     t.index ["business_entity_id", "buyer_id"], name: "index_buy_orders_on_business_entity_id_and_buyer_id"
     t.index ["business_entity_id"], name: "index_buy_orders_on_business_entity_id"
     t.index ["buyer_id"], name: "index_buy_orders_on_buyer_id"

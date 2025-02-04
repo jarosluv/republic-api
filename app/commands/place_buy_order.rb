@@ -70,7 +70,8 @@ class PlaceBuyOrder
     order = entity.buy_orders.create!(
       buyer: buyer,
       share_quantity: quantity,
-      share_price: entity.share_price
+      share_price: entity.share_price,
+      placed_at: Time.current
     )
     Success(order)
   rescue ActiveRecord::RecordInvalid => error

@@ -6,6 +6,7 @@ gem "puma", ">= 5.0"
 gem "solid_cache"
 gem "solid_queue"
 gem "dry-monads"
+gem "stateful_enum"
 gem "bootsnap", require: false
 gem "thruster", require: false
 

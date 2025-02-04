@@ -4,6 +4,7 @@
     status: pending
     share_quantity: 5
     share_price: 5
+    placed_at: <%= Time.current %>
 
   accepted_order:
     business_entity: company
@@ -11,3 +12,14 @@
     status: accepted
     share_quantity: 100
     share_price: 5
+    placed_at: <%= 7.days.ago %>
+    processed_at: <%= 1.day.ago %>
+
+  rejected_order:
+    business_entity: company
+    buyer: buyer_with_shares
+    status: rejected
+    share_quantity: 100
+    share_price: 5
+    placed_at: <%= 3.days.ago %>
+    processed_at: <%= 2.days.ago %>
