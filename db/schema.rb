@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_04_224803) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_04_234742) do
   create_table "business_entities", force: :cascade do |t|
     t.integer "business_owner_id", null: false
     t.string "name"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_224803) do
     t.decimal "share_price", precision: 12, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["business_owner_id", "name"], name: "index_business_entities_on_business_owner_id_and_name", unique: true
     t.index ["business_owner_id"], name: "index_business_entities_on_business_owner_id"
   end
 
@@ -48,6 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_224803) do
     t.decimal "available_funds", precision: 12, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_buyers_on_name", unique: true
   end
 
   add_foreign_key "business_entities", "business_owners"
