@@ -123,16 +123,16 @@ RSpec.describe "BuyOrders API", type: :request do
 
   describe "PUT /api/v1/buy_orders/:buy_order_id/accept" do
     let(:buy_order) { buy_orders(:pending_order) }
-    let(:accept_buy_order_double) { instance_double(AcceptBuyOrder) }
+    let(:reject_buy_order_double) { instance_double(AcceptBuyOrder) }
 
     before do
-      allow(AcceptBuyOrder).to receive(:new).and_return(accept_buy_order_double)
+      allow(AcceptBuyOrder).to receive(:new).and_return(reject_buy_order_double)
     end
 
     context "when the buy_order is accepted successfully" do
       before do
         success_result = Dry::Monads::Success(buy_order)
-        allow(accept_buy_order_double).to receive(:call).and_return(success_result)
+        allow(reject_buy_order_double).to receive(:call).and_return(success_result)
       end
 
       it "returns a 200 OK response and the buy_order JSON" do
@@ -147,7 +147,7 @@ RSpec.describe "BuyOrders API", type: :request do
 
     context "when accepting the buy_order fails" do
       before do
-        allow(accept_buy_order_double).to receive(:call).and_return(Dry::Monads::Failure(:buy_order_not_saved))
+        allow(reject_buy_order_double).to receive(:call).and_return(Dry::Monads::Failure(:buy_order_not_saved))
       end
 
       it "returns a 422 Unprocessable Entity with an error message" do
@@ -164,6 +164,59 @@ RSpec.describe "BuyOrders API", type: :request do
     context "when the buy_order is not found" do
       it "returns a 404 Not Found" do
         put "/api/v1/buy_orders/999999/accept"  # Nonexistent ID
+        expect(response).to have_http_status(:not_found)
+        expect(response).to conform_schema(404)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("error")
+        expect(json["message"]).to eq("Buy order not found")
+      end
+    end
+  end
+
+  describe "PUT /api/v1/buy_orders/:buy_order_id/reject" do
+    let(:buy_order) { buy_orders(:pending_order) }
+    let(:reject_buy_order_double) { instance_double(RejectBuyOrder) }
+
+    before do
+      allow(RejectBuyOrder).to receive(:new).and_return(reject_buy_order_double)
+    end
+
+    context "when the buy_order is accepted successfully" do
+      before do
+        success_result = Dry::Monads::Success(buy_order)
+        allow(reject_buy_order_double).to receive(:call).and_return(success_result)
+      end
+
+      it "returns a 200 OK response and the buy_order JSON" do
+        put "/api/v1/buy_orders/#{buy_order.id}/reject"
+        expect(response).to have_http_status(:ok)
+        expect(response).to conform_schema(200)
+
+        json = JSON.parse(response.body)
+        expect(json["id"]).to eq(buy_order.id)
+      end
+    end
+
+    context "when accepting the buy_order fails" do
+      before do
+        allow(reject_buy_order_double).to receive(:call).and_return(Dry::Monads::Failure(:buy_order_not_saved))
+      end
+
+      it "returns a 422 Unprocessable Entity with an error message" do
+        put "/api/v1/buy_orders/#{buy_order.id}/reject"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to conform_schema(422)
+
+        json = JSON.parse(response.body)
+        expect(json["status"]).to eq("error")
+        expect(json["message"]).to match /An error occurred while processing your order. Please try again later./
+      end
+    end
+
+    context "when the buy_order is not found" do
+      it "returns a 404 Not Found" do
+        put "/api/v1/buy_orders/999999/reject"  # Nonexistent ID
         expect(response).to have_http_status(:not_found)
         expect(response).to conform_schema(404)
 

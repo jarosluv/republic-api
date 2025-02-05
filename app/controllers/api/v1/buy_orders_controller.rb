@@ -42,6 +42,20 @@ module Api
         render json: { status: "error", message: "Buy order not found" }, status: :not_found
       end
 
+      # PUT /api/v1/buy_orders/:buy_order_id/reject
+      def reject
+        buy_order = BuyOrder.find(params[:buy_order_id])
+        result = RejectBuyOrder.new.call(buy_order)
+
+        if result.success?
+          render json: result.value!, status: :ok
+        else
+          render json: { status: "error", message: error_message(result.failure) }, status: :unprocessable_content
+        end
+      rescue ActiveRecord::RecordNotFound
+        render json: { status: "error", message: "Buy order not found" }, status: :not_found
+      end
+
       private
 
       def error_message(error)

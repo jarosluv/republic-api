@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "buy_orders/create"
-  get "buy_orders/update"
   mount Rswag::Ui::Engine => "/api_docs"
   mount Rswag::Api::Engine => "/api_docs"
 
@@ -14,6 +12,7 @@ Rails.application.routes.draw do
         resources :business_entities, only: [ :index, :show ], shallow: true do
           resources :buy_orders, only: [ :index, :create ] do
             put :accept
+            put :reject
           end
         end
       end
