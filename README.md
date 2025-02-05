@@ -8,6 +8,32 @@ A Ruby on Rails API-based application that enables business owners to list their
 - Rails 8.0
 - SQLite
 
+## API Documentation
+
+### Authentication
+
+The API uses HTTP Basic Authentication. Include credentials in the request header or use OpenAPI UI.
+
+### API Testing with OpenAPI
+
+The API can be tested using the OpenAPI specification located at `docs/v1/openapi.yml`.
+
+To test using Swagger UI:
+
+1. Setup the database:
+
+```bash
+rails db:setup
+```
+
+1. Start the Rails server with credentials for Basic HTTP Auth via environment variables:
+
+```bash
+USER=user PASSWORD=pass rails s -p 3000
+```
+
+1. Visit `http://localhost:3000/api_docs/index.html` in your browser.
+
 ## Core Features
 
 - Business listing with available shares management
@@ -22,26 +48,6 @@ A Ruby on Rails API-based application that enables business owners to list their
 - `Business`: Represents listed businesses with share information
 - `Order`: Manages buy orders and their statuses
 - `Transaction`: Records completed share purchases
-
-## API Documentation
-
-### Authentication
-
-The API uses HTTP Basic Authentication. Include credentials in the request header:
-
-### API Testing with OpenAPI
-
-The API can be tested using the OpenAPI specification located at `docs/v1/openapi.yml`.
-
-To test using Swagger UI:
-
-1. Start the Rails server with credentials for Basic HTTP Auth via environment variables:
-
-```bash
-USER=user PASSWORD=pass rails s -p 3000
-```
-
-1. Visit `http://localhost:3000/api_docs/index.html` in your browser.
 
 ## Future Considerations
 

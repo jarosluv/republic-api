@@ -9,14 +9,14 @@
 #   end
 
 # Clear existing data
-puts "Cleaning database..."
+Rails.logger.debug "Cleaning database..."
 BuyOrder.delete_all
 BusinessEntity.delete_all
 BusinessOwner.delete_all
 Buyer.delete_all
 
 # Create Business Owners
-puts "Creating business owners..."
+Rails.logger.debug "Creating business owners..."
 owners = {
   tech_mogul: BusinessOwner.create!(name: "Tech Mogul"),
   retail_giant: BusinessOwner.create!(name: "Retail Giant"),
@@ -29,7 +29,7 @@ owners = {
 }
 
 # Create Business Entities
-puts "Creating business entities..."
+Rails.logger.debug "Creating business entities..."
 entities = {
   tech_corp: BusinessEntity.create!(
     business_owner: owners[:tech_mogul],
@@ -37,21 +37,21 @@ entities = {
     available_shares: 10000,
     share_price: 500.00
   ),
-  
+
   corner_store: BusinessEntity.create!(
     business_owner: owners[:retail_giant],
     name: "Corner Store Chain",
     available_shares: 100,
     share_price: 10.00
   ),
-  
+
   sold_out_startup: BusinessEntity.create!(
     business_owner: owners[:startup_founder],
     name: "Sold Out Startup",
     available_shares: 0,
     share_price: 50.00
   ),
-  
+
   luxury_brand: BusinessEntity.create!(
     business_owner: owners[:retail_giant],
     name: "Luxury Brand Co",
@@ -89,23 +89,23 @@ entities = {
 }
 
 # Create Buyers
-puts "Creating buyers..."
+Rails.logger.debug "Creating buyers..."
 buyers = {
   wealthy_investor: Buyer.create!(
     name: "Wealthy Investor",
     available_funds: 1_000_000.00
   ),
-  
+
   average_joe: Buyer.create!(
     name: "Average Joe",
     available_funds: 1000.00
   ),
-  
+
   broke_buyer: Buyer.create!(
     name: "Broke Buyer",
     available_funds: 0.00
   ),
-  
+
   careful_investor: Buyer.create!(
     name: "Careful Investor",
     available_funds: 5000.00
@@ -133,7 +133,7 @@ buyers = {
 }
 
 # Create Buy Orders
-puts "Creating buy orders..."
+Rails.logger.debug "Creating buy orders..."
 orders = {
   pending_small: BuyOrder.create!(
     business_entity: entities[:tech_corp],
@@ -143,34 +143,34 @@ orders = {
     share_price: 500.00,
     placed_at: Time.current
   ),
-  
+
   pending_large: BuyOrder.create!(
     business_entity: entities[:corner_store],
     buyer: buyers[:average_joe],
     status: "pending",
     share_quantity: 50,
     share_price: 10.00,
-    placed_at: Time.current - 1.day
+    placed_at: 1.day.ago
   ),
-  
+
   accepted_recent: BuyOrder.create!(
     business_entity: entities[:tech_corp],
     buyer: buyers[:wealthy_investor],
     status: "accepted",
     share_quantity: 5,
     share_price: 500.00,
-    placed_at: Time.current - 2.days,
-    processed_at: Time.current - 1.day
+    placed_at: 2.days.ago,
+    processed_at: 1.day.ago
   ),
-  
+
   accepted_old: BuyOrder.create!(
     business_entity: entities[:luxury_brand],
     buyer: buyers[:careful_investor],
     status: "accepted",
     share_quantity: 2,
     share_price: 1000.00,
-    placed_at: Time.current - 30.days,
-    processed_at: Time.current - 29.days
+    placed_at: 30.days.ago,
+    processed_at: 29.days.ago
   ),
 
   pending_medium: BuyOrder.create!(
@@ -179,7 +179,7 @@ orders = {
     status: "pending",
     share_quantity: 100,
     share_price: 75.50,
-    placed_at: Time.current - 12.hours
+    placed_at: 12.hours.ago
   ),
 
   accepted_medium: BuyOrder.create!(
@@ -188,8 +188,8 @@ orders = {
     status: "accepted",
     share_quantity: 200,
     share_price: 250.00,
-    placed_at: Time.current - 15.days,
-    processed_at: Time.current - 14.days
+    placed_at: 15.days.ago,
+    processed_at: 14.days.ago
   ),
 
   rejected_medium: BuyOrder.create!(
@@ -198,8 +198,8 @@ orders = {
     status: "rejected",
     share_quantity: 25,
     share_price: 45.00,
-    placed_at: Time.current - 5.days,
-    processed_at: Time.current - 4.days
+    placed_at: 5.days.ago,
+    processed_at: 4.days.ago
   ),
 
   rejected_small: BuyOrder.create!(
@@ -208,14 +208,14 @@ orders = {
     status: "rejected",
     share_quantity: 15,
     share_price: 150.00,
-    placed_at: Time.current - 8.days,
-    processed_at: Time.current - 7.days
+    placed_at: 8.days.ago,
+    processed_at: 7.days.ago
   )
 }
 
-puts "Seed completed successfully!"
-puts "Created:"
-puts "- #{BusinessOwner.count} business owners"
-puts "- #{BusinessEntity.count} business entities"
-puts "- #{Buyer.count} buyers"
-puts "- #{BuyOrder.count} buy orders"
+Rails.logger.debug "Seed completed successfully!"
+Rails.logger.debug "Created:"
+Rails.logger.debug { "- #{BusinessOwner.count} business owners" }
+Rails.logger.debug { "- #{BusinessEntity.count} business entities" }
+Rails.logger.debug { "- #{Buyer.count} buyers" }
+Rails.logger.debug { "- #{BuyOrder.count} buy orders" }
