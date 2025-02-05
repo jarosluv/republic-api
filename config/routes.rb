@@ -8,6 +8,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :business_entities, only: [] do
+        collection do
+          get :available
+        end
+      end
+
       resources :business_owners, only: [ :index, :show ], shallow: true do
         resources :business_entities, only: [ :index, :show ], shallow: true do
           resources :buy_orders, only: [ :index, :create ] do

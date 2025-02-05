@@ -52,6 +52,21 @@ paths:
       tags:
         - Business
 
+  /api/v1/business_entities/available:
+    get:
+      summary: Retrieve the entities available for trading
+      responses:
+        "200":
+          description: Available business entities.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BusinessEntity"
+      tags:
+        - Marketplace
+
   /api/v1/business_owners/{business_owner_id}/business_entities:
     get:
       summary: Retrieve the business owner's entities

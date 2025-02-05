@@ -11,6 +11,13 @@ module Api
         render json: { error: "Business owner not found" }, status: :not_found
       end
 
+      # GET /api/v1/business_entities/available
+      def available
+        business_entities = BusinessEntity.available_for_trading
+
+        render json: business_entities, status: :ok
+      end
+
 
       # GET /api/v1/business_entities/:id
       def show

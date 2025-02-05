@@ -26,6 +26,18 @@ RSpec.describe "BusinessEntities API", type: :request do
     end
   end
 
+  describe "GET /api/v1/business_entities/available" do
+    it "returns all available business entities with status 200" do
+      get "/api/v1/business_entities/available"
+      expect(response).to have_http_status(:ok)
+      expect(response).to conform_schema(200)
+
+      json = JSON.parse(response.body)
+      expect(json).to be_an Array
+      expect(json.size).to eq BusinessEntity.available_for_trading.count
+    end
+  end
+
   describe "GET /api/v1/business_entities/:id" do
     context "when the business entity exists" do
       it "returns the business entity with status 200" do
