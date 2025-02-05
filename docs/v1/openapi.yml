@@ -9,7 +9,7 @@ info:
     - Business owners can accept or reject pending orders.
     - Buyers can cancel their own orders.
 servers:
-  - url: https://api.example.com/v1
+  - url: http://localhost:3000
 
 paths:
   /api/v1/business_owners:
@@ -24,7 +24,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/BusinessOwner"
-
+      tags:
+        - Business
   /api/v1/business_owners/{id}:
     get:
       summary: Retrieve a business owner by ID
@@ -48,6 +49,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+      tags:
+        - Business
 
   /api/v1/business_owners/{business_owner_id}/business_entities:
     get:
@@ -74,6 +77,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+      tags:
+        - Business
 
   /api/v1/business_entities/{id}:
     get:
@@ -98,6 +103,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+      tags:
+        - Business
 
   /api/v1/buyers:
     get:
@@ -111,6 +118,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Buyer"
+      tags:
+        - Buyers
 
   /api/v1/buyers/{id}:
     get:
@@ -135,6 +144,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+      tags:
+        - Buyers
 
   /api/v1/business_entities/{business_entity_id}/buy_orders:
     get:
@@ -164,6 +175,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+      tags:
+        - Marketplace
     post:
       summary: Create a new buy order for a business entity
       description: >
@@ -201,7 +214,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+      tags:
+        - Marketplace
   /api/v1/buy_orders/{id}/accept:
     put:
       summary: Accept a buy order
@@ -233,7 +247,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+      tags:
+        - Marketplace
   /api/v1/buy_orders/{id}/reject:
     put:
       summary: Reject a buy order
@@ -265,29 +280,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
-  /api/v1/buy_orders/{id}:
-    delete:
-      summary: Cancel a buy order
-      description: >
-        Buyers can cancel (delete) their own buy orders.
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: The ID of the buy order to cancel.
-      responses:
-        "204":
-          description: Buy order canceled successfully.
-        "404":
-          description: Buy order not found.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
+      tags:
+        - Marketplace
 components:
   schemas:
     BusinessOwner:
