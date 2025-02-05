@@ -15,7 +15,7 @@ module Api
       def available
         business_entities = BusinessEntity.available_for_trading
 
-        render json: business_entities, status: :ok
+        render json: business_entities.as_json(only: %i[id name available_shares share_price]), status: :ok
       end
 
 
