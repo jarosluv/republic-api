@@ -35,10 +35,10 @@ The API can be tested using the OpenAPI specification located at `docs/v1/openap
 
 To test using Swagger UI:
 
-1. Start the Rails server
+1. Start the Rails server with credentials for Basic HTTP Auth via environment variables:
 
 ```bash
-rails s
+USER=user PASSWORD=pass rails s -p 3000
 ```
 
 1. Visit `http://localhost:3000/api_docs/index.html` in your browser.
