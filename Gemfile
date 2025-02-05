@@ -27,4 +27,5 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "rspec-rails", require: false
   gem "rubocop-rails-omakase", require: false
+  gem "simplecov", "~> 0.22", require: false
 end
