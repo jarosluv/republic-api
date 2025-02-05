@@ -1,11 +1,14 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require "spec_helper"
 ENV["RAILS_ENV"] ||= "test"
+ENV["USER"] ||= "test"
+ENV["PASSWORD"] ||= "test"
 
 require "simplecov"
 SimpleCov.start "rails"
 
 require_relative "../config/environment"
+require_relative "support/auth_headers"
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 # Uncomment the line below in case you have `--require rails_helper` in the `.rspec` file
@@ -75,4 +78,6 @@ RSpec.configure do |config|
   # Open API (Swagger)
   path_to_openapi = Rails.root.join("docs/v1/openapi.yml")
   config.include Skooma::RSpec[path_to_openapi, coverage: :report], type: :request
+
+  config.include AuthHeaders, type: :request
 end
