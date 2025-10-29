@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "bootsnap", require: false
 gem "dry-monads"
 gem "puma", ">= 5.0"
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 8.0.4"
 gem "solid_cache"
 gem "solid_queue"
 gem "sqlite3", ">= 2.1"
